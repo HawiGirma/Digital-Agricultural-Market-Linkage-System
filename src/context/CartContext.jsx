@@ -1,4 +1,12 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import {
+  DELIVERY_STATUS,
+  DEFAULT_BUYER_LOCATION,
+  DEFAULT_FARMER_LOCATION,
+  computeEtaIso,
+  labelForDeliveryStatus,
+} from "../constants/trackingConfig";
+import { persistOrderToFirestore, updateOrderDeliveryInFirestore } from "../services/ordersFirestore";
 
 const CART_KEY = "agrilink_cart";
 const FAV_KEY = "agrilink_favorites";
@@ -100,6 +108,37 @@ export const CartProvider = ({ children }) => {
   const isFavorite = (id) => favoriteItems.some((item) => item.id === id);
 
   /**
+   * Farmer / admin — updates local order + Firestore when configured.
+   * @param {string} orderId
+   * @param {string} deliveryStatus
+   */
+  const updateOrderDeliveryStatus = (orderId, deliveryStatus) => {
+    let snapshot = null;
+    setOrders((prev) =>
+      prev.map((o) => {
+        if (o.id !== orderId) return o;
+        const createdAt =
+          typeof o.createdAt === "number" ? o.createdAt : Date.now();
+        const estimatedArrival = computeEtaIso(createdAt, deliveryStatus);
+        const updated = {
+          ...o,
+          deliveryStatus,
+          status: labelForDeliveryStatus(deliveryStatus),
+          estimatedArrival,
+        };
+        snapshot = updated;
+        return updated;
+      })
+    );
+    if (snapshot) {
+      void updateOrderDeliveryInFirestore(orderId, deliveryStatus, {
+        status: snapshot.status,
+        estimatedArrival: snapshot.estimatedArrival,
+      });
+    }
+  };
+
+  /**
    * @param {object} [checkoutDetails]
    * @param {string} [checkoutDetails.customerName]
    * @param {string} [checkoutDetails.phone]
@@ -113,25 +152,43 @@ export const CartProvider = ({ children }) => {
       (sum, item) => sum + item.price * item.quantity,
       0
     );
+    const createdAt = Date.now();
+    const first = cartItems[0];
+    const primarySeller = {
+      name: first?.sellerName || "AgriLink Partner",
+      id: first?.sellerId || first?.ownerId || "",
+      region: first?.region || "Ethiopia",
+      phone: "",
+    };
+    const deliveryStatus = DELIVERY_STATUS.PENDING;
+
     const newOrder = {
-      id: `ORD-${Date.now()}`,
+      id: `ORD-${createdAt}`,
+      trackingId: `AGR-${createdAt.toString(36).toUpperCase()}`,
+      createdAt,
       date: new Date().toLocaleDateString("en-ET", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
       }),
       total: Number(total.toFixed(0)),
-      status: "Processing",
+      status: labelForDeliveryStatus(deliveryStatus),
+      deliveryStatus,
       items: cartItems.map((i) => ({ ...i })),
       itemCount: cartItems.reduce((sum, item) => sum + item.quantity, 0),
       customerName: checkoutDetails.customerName || "",
       phone: checkoutDetails.phone || "",
       deliveryLocation: checkoutDetails.deliveryLocation || "",
       paymentMethod: checkoutDetails.paymentMethod || "Pending",
+      farmerLocation: { ...DEFAULT_FARMER_LOCATION },
+      buyerLocation: { ...DEFAULT_BUYER_LOCATION },
+      estimatedArrival: computeEtaIso(createdAt, deliveryStatus),
+      primarySeller,
     };
 
     setOrders((prev) => [newOrder, ...prev]);
     clearCart();
+    void persistOrderToFirestore(newOrder);
     return newOrder;
   };
 
@@ -152,6 +209,7 @@ export const CartProvider = ({ children }) => {
         isFavorite,
         orders,
         placeOrder,
+        updateOrderDeliveryStatus,
         totalItems,
       }}
     >

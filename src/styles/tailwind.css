@@ -22,4 +22,38 @@ body {
       focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20
       dark:border-stone-600 dark:bg-stone-900 dark:text-stone-100 dark:focus:border-emerald-400;
   }
+
+  .glass-card {
+    @apply rounded-2xl border border-white/10 bg-stone-900/45 shadow-2xl shadow-black/40 backdrop-blur-xl;
+  }
+
+  .tracking-marker-wrap {
+    @apply bg-transparent;
+  }
+
+  .tracking-pin {
+    @apply h-3.5 w-3.5 rounded-full border-2 border-white shadow-lg ring-2 ring-black/30;
+  }
+
+  .tracking-pin--farm {
+    @apply bg-emerald-500;
+  }
+
+  .tracking-pin--buyer {
+    @apply bg-sky-500;
+  }
+
+  .tracking-truck {
+    @apply flex h-9 w-9 items-center justify-center rounded-full border border-amber-400/60 bg-amber-500/90 text-stone-900 shadow-lg ring-2 ring-amber-200/40;
+  }
+}
+
+@keyframes tracking-route-dash {
+  to {
+    stroke-dashoffset: -48;
+  }
+}
+
+.leaflet-overlay-pane svg path.tracking-route-anim {
+  animation: tracking-route-dash 1.25s linear infinite;
 }

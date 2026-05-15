@@ -10,7 +10,7 @@ import {
   Bell,
   LogOut
 } from 'lucide-react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { formatETB } from '../utils/formatCurrency';
@@ -283,6 +283,14 @@ export function Account() {
                         </div>
                       </div>
                       <p className="text-sm text-emerald-700 dark:text-emerald-400 mt-3">{order.status}</p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <Link
+                          to={`/tracking/${order.id}`}
+                          className="inline-flex rounded-lg bg-emerald-900 px-3 py-1.5 text-xs font-bold text-[var(--color-brand-lime)] transition hover:bg-emerald-800"
+                        >
+                          Track delivery
+                        </Link>
+                      </div>
                       {(order.deliveryLocation || order.phone) && (
                         <p className="text-xs text-stone-500 dark:text-stone-400 mt-2">
                           {order.customerName && <span>{order.customerName} · </span>}

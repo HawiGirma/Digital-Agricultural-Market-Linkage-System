@@ -13,6 +13,7 @@ import Categories from "./pages/categories";
 import AboutPage from "./pages/about";
 import Dashboard from "./pages/dashboard";
 import ForgotPassword from "./pages/forgotpassword";
+import TrackingPage from "./pages/tracking";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { path: "checkout", element: <Checkout /> },
+      { path: "tracking/:orderId", element: <TrackingPage /> },
       { path: "contact", element: <Contact /> },
       { path: "account", element: <Account /> },
       { path: "login", element: <Login /> },

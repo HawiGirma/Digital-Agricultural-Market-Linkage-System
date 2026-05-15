@@ -15,6 +15,7 @@ import { useProducts } from "../context/ProductContext";
 import { useCart } from "../context/CartContext";
 import { CATEGORIES, REGIONS } from "../assets/products";
 import { formatETB } from "../utils/formatCurrency";
+import { DELIVERY_STATUS_ORDER, labelForDeliveryStatus } from "../constants/trackingConfig";
 
 const emptyForm = {
   name: "",
@@ -31,6 +32,14 @@ const emptyForm = {
 function Dashboard() {
   const { user, isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const { orders, favoriteItems, updateOrderDeliveryStatus } = useCart();
+  const {
+    listingsForOwner,
+    addFarmerProduct,
+    updateFarmerProduct,
+    deleteFarmerProduct,
+    allProducts,
+  } = useProducts();
 
   if (!isLoggedIn || !user) {
     return (
@@ -53,17 +62,9 @@ function Dashboard() {
   }
 
   const role = user?.role || "buyer";
-  const { orders, favoriteItems } = useCart();
-  const {
-    listingsForOwner,
-    addFarmerProduct,
-    updateFarmerProduct,
-    deleteFarmerProduct,
-    allProducts,
-  } = useProducts();
 
   if (role === "admin") {
-    return <AdminView allProducts={allProducts} orders={orders} />;
+    return <AdminView allProducts={allProducts} orders={orders} onDeliveryStatusChange={updateOrderDeliveryStatus} />;
   }
   if (role === "farmer") {
     return (
@@ -71,6 +72,7 @@ function Dashboard() {
         user={user}
         listings={listingsForOwner(user?.email)}
         orders={orders}
+        onDeliveryStatusChange={updateOrderDeliveryStatus}
         onAdd={(payload) =>
           addFarmerProduct(payload, user.email, user.fullName || user.firstName || "Farmer")
         }
@@ -82,7 +84,7 @@ function Dashboard() {
   return <BuyerView orders={orders} favoriteItems={favoriteItems} />;
 }
 
-function AdminView({ allProducts, orders }) {
+function AdminView({ allProducts, orders, onDeliveryStatusChange }) {
   const totalUsers = 1328;
   const revenue = orders.reduce((s, o) => s + (o.total || 0), 0);
 
@@ -112,6 +114,57 @@ function AdminView({ allProducts, orders }) {
           Sum of completed mock checkouts on this device.
         </p>
       </div>
+
+      <div className="mt-10">
+        <h2 className="text-lg font-bold text-stone-900 dark:text-stone-100">
+          Order logistics & tracking
+        </h2>
+        <p className="mt-1 text-sm text-stone-500 dark:text-stone-400">
+          Update delivery stage for any order — buyers see changes on the tracking page when Firebase
+          is configured.
+        </p>
+        {orders.length === 0 ? (
+          <p className="mt-4 text-sm text-stone-500 dark:text-stone-400">No orders yet.</p>
+        ) : (
+          <ul className="mt-4 space-y-3">
+            {orders.map((o) => (
+              <li
+                key={o.id}
+                className="flex flex-col gap-3 rounded-2xl border border-stone-200 bg-white p-4 dark:border-stone-800 dark:bg-stone-900 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div>
+                  <span className="font-mono font-semibold text-stone-900 dark:text-stone-100">
+                    {o.id}
+                  </span>
+                  <span className="text-stone-500 dark:text-stone-400"> · {o.date}</span>
+                  <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
+                    {o.status || labelForDeliveryStatus(o.deliveryStatus || "pending")}
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <select
+                    value={o.deliveryStatus || "pending"}
+                    onChange={(e) => onDeliveryStatusChange(o.id, e.target.value)}
+                    className="input max-w-[240px] py-2 text-xs"
+                  >
+                    {DELIVERY_STATUS_ORDER.map((key) => (
+                      <option key={key} value={key}>
+                        {labelForDeliveryStatus(key)}
+                      </option>
+                    ))}
+                  </select>
+                  <Link
+                    to={`/tracking/${o.id}`}
+                    className="rounded-lg bg-emerald-900 px-3 py-2 text-xs font-bold text-[var(--color-brand-lime)] transition hover:bg-emerald-800"
+                  >
+                    View map
+                  </Link>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }
@@ -132,7 +185,15 @@ function StatCard({ label, value, icon: Icon }) {
   );
 }
 
-function FarmerView({ user, listings, orders, onAdd, onUpdate, onDelete }) {
+function FarmerView({
+  user,
+  listings,
+  orders,
+  onAdd,
+  onUpdate,
+  onDelete,
+  onDeliveryStatusChange,
+}) {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
@@ -389,13 +450,39 @@ function FarmerView({ user, listings, orders, onAdd, onUpdate, onDelete }) {
                 key={o.id}
                 className="rounded-2xl border border-stone-200 bg-white p-4 text-sm dark:border-stone-800 dark:bg-stone-900"
               >
-                <span className="font-mono font-semibold text-stone-900 dark:text-stone-100">
-                  {o.id}
-                </span>
-                <span className="text-stone-500 dark:text-stone-400"> · {o.date}</span>
-                <span className="ml-2 font-semibold text-emerald-800 dark:text-emerald-300">
-                  {formatETB(o.total)}
-                </span>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <span className="font-mono font-semibold text-stone-900 dark:text-stone-100">
+                      {o.id}
+                    </span>
+                    <span className="text-stone-500 dark:text-stone-400"> · {o.date}</span>
+                    <span className="ml-2 font-semibold text-emerald-800 dark:text-emerald-300">
+                      {formatETB(o.total)}
+                    </span>
+                    <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">
+                      {o.status || labelForDeliveryStatus(o.deliveryStatus || "pending")}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <select
+                      value={o.deliveryStatus || "pending"}
+                      onChange={(e) => onDeliveryStatusChange(o.id, e.target.value)}
+                      className="input max-w-[240px] py-2 text-xs"
+                    >
+                      {DELIVERY_STATUS_ORDER.map((key) => (
+                        <option key={key} value={key}>
+                          {labelForDeliveryStatus(key)}
+                        </option>
+                      ))}
+                    </select>
+                    <Link
+                      to={`/tracking/${o.id}`}
+                      className="rounded-lg bg-emerald-900 px-3 py-2 text-xs font-bold text-[var(--color-brand-lime)] transition hover:bg-emerald-800"
+                    >
+                      Map
+                    </Link>
+                  </div>
+                </div>
               </li>
             ))}
           </ul>
@@ -452,12 +539,20 @@ function BuyerView({ orders, favoriteItems }) {
               {orders.map((o) => (
                 <li
                   key={o.id}
-                  className="rounded-xl border border-stone-100 p-3 text-sm dark:border-stone-800"
+                  className="flex flex-col gap-2 rounded-xl border border-stone-100 p-3 text-sm dark:border-stone-800 sm:flex-row sm:items-center sm:justify-between"
                 >
-                  <span className="font-mono font-semibold">{o.id}</span> · {o.date} ·{" "}
-                  <span className="text-emerald-800 dark:text-emerald-300">
-                    {formatETB(o.total)}
-                  </span>
+                  <div>
+                    <span className="font-mono font-semibold">{o.id}</span> · {o.date} ·{" "}
+                    <span className="text-emerald-800 dark:text-emerald-300">
+                      {formatETB(o.total)}
+                    </span>
+                  </div>
+                  <Link
+                    to={`/tracking/${o.id}`}
+                    className="shrink-0 text-xs font-bold text-emerald-800 underline-offset-2 hover:underline dark:text-emerald-400"
+                  >
+                    Track
+                  </Link>
                 </li>
               ))}
             </ul>

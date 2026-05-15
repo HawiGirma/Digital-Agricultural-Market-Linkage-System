@@ -41,9 +41,9 @@ function Checkout() {
 
   useEffect(() => {
     if (!orderPlaced) return;
-    const timer = setTimeout(() => navigate("/account?tab=orders"), 2200);
+    const timer = setTimeout(() => navigate(`/tracking/${placedId}`), 1600);
     return () => clearTimeout(timer);
-  }, [orderPlaced, navigate]);
+  }, [orderPlaced, navigate, placedId]);
 
   useEffect(() => {
     if (cartItems.length === 0 && !orderPlaced) {
@@ -222,7 +222,7 @@ function Checkout() {
                 Reference <span className="font-mono font-semibold">{placedId}</span>
               </p>
               <p className="mt-4 text-sm text-stone-500 dark:text-stone-400">
-                Redirecting to your orders…
+                Opening live tracking and map…
               </p>
             </motion.div>
           </motion.div>
