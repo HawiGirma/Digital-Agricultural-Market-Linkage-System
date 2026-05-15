@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces", ui-serif, Georgia, serif;
+  --color-brand-forest: #064e3b;
+  --color-brand-lime: #bef264;
+  --color-brand-cream: #f7f5f0;
+  --color-brand-sand: #e8e4dc;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+@layer components {
+  .input {
+    @apply w-full rounded-xl border border-stone-200 bg-white px-4 py-3 text-stone-900 outline-none transition
+      focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20
+      dark:border-stone-600 dark:bg-stone-900 dark:text-stone-100 dark:focus:border-emerald-400;
+  }
+}
