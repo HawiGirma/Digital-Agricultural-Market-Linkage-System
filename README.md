@@ -1,83 +1,400 @@
-# 🛒 Eco-Cart Grocery
+# AgriLink Ethiopia 🌾
 
-A modern, responsive grocery shopping web application built with **React (Vite)**, **JSX**, and **Tailwind CSS**.  
-Eco-Cart focuses on delivering a clean UI and a smooth shopping experience for browsing fresh and sustainable products.
+A modern, responsive agricultural marketplace platform connecting Ethiopian farmers directly with buyers, cooperatives, and local markets.
 
-🔗 **Live Demo:** https://eco-cart-grocery.vercel.app/
+AgriLink Ethiopia helps farmers digitally showcase agricultural products while enabling buyers to easily browse, search, order, and connect with suppliers through a clean and user-friendly marketplace experience.
 
----
-
-## 🌿 Overview
-
-Eco-Cart Grocery is an e-commerce frontend that allows users to:
-
-- Browse grocery products by category
-- Search for items easily
-- Filter organic products
-- View product availability (In stock / Out of stock)
-- Add items to cart with quantity control
-
-The UI is designed to be minimal, modern, and responsive across both desktop and mobile devices.
+🔗 Live Demo: Coming Soon
 
 ---
 
-## 🚀 Tech Stack
+# 🌍 Overview
 
-- **Frontend:** React (Vite)
-- **Language:** JavaScript (JSX)
-- **Styling:** Tailwind CSS + Custom CSS
-- **Deployment:** Vercel
+AgriLink Ethiopia is a lightweight MVP agricultural market linkage platform built with modern web technologies.
 
----
+The platform allows:
 
-## ✨ Features
+* Farmers to list and manage agricultural products
+* Buyers to browse and purchase products
+* Users to search and filter products by category and region
+* Customers to add products to cart and place orders
+* Marketplace participants to connect digitally
 
-- 🔍 **Search Functionality** – Quickly find products
-- 🧭 **Category Filters** – Fruits, Vegetables, Bakery, Dairy, Meat, Seafood
-- 🌱 **Organic Filter Toggle**
-- 🛒 **Add to Cart System**
-- ➕➖ **Quantity Selector**
-- ❌ **Out-of-Stock Handling**
-- ❤️ **Wishlist Icon (UI)**
-- 📱 **Responsive Design (Mobile + Desktop)**
+The system focuses on:
 
----
-
-## 🖼️ Screenshots
-
-### 💻 Desktop View
-![Desktop Screenshot](./screenshots/desktop.png)
-
-### 📱 Mobile View
-![Mobile Screenshot](./screenshots/mobile.png)
+* simplicity
+* performance
+* responsive design
+* multilingual accessibility
+* scalable frontend architecture
 
 ---
 
-## 📦 Sample Products
+# 🚀 Tech Stack
 
-- Organic Bananas *(Out of Stock)*
-- Fresh Strawberries – **$3.49 / pack**
-- Organic Spinach – **$2.99 / bunch**
-- Fresh Tomatoes – **$1.29 / lb**
-- Whole Wheat Bread – **$3.49 / loaf**
-- Organic Milk *(Out of Stock)*
-- Greek Yogurt *(Out of Stock)*
-- Organic Chicken Breast – **$8.99 / lb**
+Frontend & Backend:
+
+* Next.js (App Router)
+* TypeScript
+
+Database & Backend Services:
+
+* Firebase Authentication
+* Cloud Firestore
+* Firebase Storage
+
+Styling & UI:
+
+* Tailwind CSS
+* Framer Motion
+
+State Management:
+
+* Context API / Zustand
+
+Localization:
+
+* next-intl / i18next
+
+Deployment:
+
+* Vercel
 
 ---
 
-## 🛠️ Installation & Setup
+# ✨ Features
 
-Clone the repository:
+## 🔐 Authentication
 
+* User Registration
+* Login & Logout
+* Forgot Password
+* Role-based Access
+* Farmer / Buyer / Admin roles
 
+---
 
+## 🌾 Agricultural Marketplace
 
-```markdown
-## Commands
+* Browse agricultural products
+* Product detail pages
+* Product categories
+* Featured products
+* Organic product tags
+* Stock availability handling
 
-git clone https://github.com/Ged45/Eco-Cart-Grocery   # closes automatically when done
-cd eco-cart-grocery                                    # completes instantly
-npm install                                            # closes automatically when done
-npm run dev                                            # press Ctrl+C to stop
-npm run build                                          # closes automatically when done
+---
+
+## 🔍 Smart Search & Filtering
+
+* Search by product name
+* Filter by category
+* Filter by region
+* Organic products filter
+* In-stock products filter
+
+---
+
+## 🛒 Shopping Experience
+
+* Add to Cart
+* Remove from Cart
+* Quantity Control
+* Cart Persistence
+* Checkout Flow
+* Order Summary
+
+---
+
+## 📦 Product Management
+
+Farmers can:
+
+* Add products
+* Edit products
+* Delete products
+* Upload product images
+* Manage inventory
+
+---
+
+## 📊 Dashboards
+
+### Farmer Dashboard
+
+* Product management
+* Order tracking
+* Sales overview
+
+### Buyer Dashboard
+
+* Order history
+* Saved cart
+* Recent purchases
+
+### Admin Dashboard
+
+* User management
+* Product moderation
+* Marketplace statistics
+
+---
+
+## 🌐 Multilingual Support
+
+Supported Languages:
+
+* English
+* Amharic
+* Afaan Oromo
+* Tigrigna
+
+Dynamic translation support for:
+
+* navigation
+* forms
+* buttons
+* checkout
+* product pages
+
+---
+
+## 🌙 Theme Support
+
+* Dark Mode
+* Light Mode
+* Persistent theme switching
+
+---
+
+## 📱 Responsive Design
+
+Fully optimized for:
+
+* Mobile devices
+* Tablets
+* Desktop screens
+
+---
+
+# 🧺 Sample Agricultural Products
+
+* Teff
+* Coffee Beans
+* Maize
+* Wheat
+* Tomatoes
+* Onion
+* Avocado
+* Chickpeas
+* Sesame Seeds
+* Honey
+
+---
+
+# 🛠️ Installation & Setup
+
+## 1. Clone Repository
+
+```bash
+git clone https://github.com/your-username/agrilink-ethiopia.git
+
+cd agrilink-ethiopia
+```
+
+---
+
+## 2. Install Dependencies
+
+```bash
+npm install
+```
+
+---
+
+## 3. Configure Environment Variables
+
+Create a `.env.local` file:
+
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_auth_domain
+
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+```
+
+---
+
+## 4. Run Development Server
+
+```bash
+npm run dev
+```
+
+Open:
+
+```bash
+http://localhost:3000
+```
+
+---
+
+## 5. Build for Production
+
+```bash
+npm run build
+```
+
+---
+
+# 📂 Recommended Folder Structure
+
+```bash
+src/
+│
+├── app/
+├── components/
+├── layouts/
+├── pages/
+├── hooks/
+├── context/
+├── services/
+├── firebase/
+├── constants/
+├── utils/
+├── translations/
+├── assets/
+├── styles/
+└── types/
+```
+
+---
+
+# 🔥 Firebase Services Used
+
+## Firebase Authentication
+
+Handles:
+
+* login
+* registration
+* user sessions
+
+## Cloud Firestore
+
+Stores:
+
+* users
+* products
+* orders
+* marketplace data
+
+## Firebase Storage
+
+Stores:
+
+* product images
+* profile images
+
+---
+
+# 🧑‍🌾 User Roles
+
+## Farmer
+
+* Manage product listings
+* Track orders
+* Update stock
+
+## Buyer
+
+* Browse marketplace
+* Add products to cart
+* Place orders
+
+## Admin
+
+* Monitor platform
+* Manage products
+* Manage users
+
+---
+
+# 📸 Main Pages
+
+* Home Page
+* Marketplace Page
+* Product Details
+* Cart
+* Checkout
+* Farmer Dashboard
+* Buyer Dashboard
+* Admin Dashboard
+* Authentication Pages
+* About Page
+
+---
+
+# 🎨 UI Features
+
+* Premium modern design
+* Tailwind-based responsive layout
+* Elegant animations
+* Smooth transitions
+* Modern product cards
+* Sticky navigation
+* Interactive marketplace UI
+
+---
+
+# 📌 Future Improvements
+
+* Real-time messaging
+* Payment integration
+* Delivery tracking
+* AI-based recommendations
+* Regional market analytics
+* PWA support
+* Voice search
+* SMS notifications
+
+---
+
+# 🌱 Project Vision
+
+AgriLink Ethiopia aims to digitally empower Ethiopian farmers by simplifying agricultural commerce and improving market accessibility through technology.
+
+The platform is designed as a scalable MVP that can evolve into a full agricultural ecosystem supporting farmers, cooperatives, logistics providers, and consumers.
+
+---
+
+# 👨‍💻 Development
+
+Built with modern frontend technologies and clean coding standards for scalability and maintainability.
+
+---
+
+# 📄 License
+
+MIT License
+
+---
+
+# 🤝 Contribution
+
+Contributions, suggestions, and improvements are welcome.
+
+Fork the repository and submit a pull request.
+
+---
+
+# 🇪🇹 AgriLink Ethiopia
+
+Connecting Farmers to Markets Digitally. 🌾
